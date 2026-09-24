@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WunnaGo - Become a Host</title>
+<style>
+  :root{
+    --cream: #FBF3D6;
+    --cream-deep: #F5EAC0;
+    --navy: #1F3A5F;
+    --navy-deep: #16283F;
+    --gold: #C79A2E;
+    --gold-soft: #E8C468;
+    --ink: #2B2B2B;
+    --white: #FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+  }
+  .phone{
+    width:100%;
+    max-width:420px;
+    min-height:100vh;
+    background: var(--cream);
+    display:flex;
+    flex-direction:column;
+  }
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px 6px;
+  }
+  .back-btn{
+    width:34px; height:34px;
+    background:var(--white);
+    border-radius:50%; border:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem; color:var(--navy); cursor:pointer;
+  }
+  .logo{font-size:1.3rem; font-weight:800; color:var(--navy);}
+  .logo .go{color:var(--gold);}
+
+  .content{padding:14px 20px 40px; flex:1;}
+
+  h1{font-size:1.35rem; color:var(--navy-deep); margin-bottom:6px; line-height:1.3;}
+  .subtitle{font-size:0.88rem; color:#666; margin-bottom:22px; line-height:1.45;}
+
+  label{
+    display:block; font-size:0.82rem; font-weight:700;
+    color:var(--navy-deep); margin-bottom:6px; margin-top:18px;
+  }
+  input[type="text"]{
+    width:100%; border:1.5px solid var(--cream-deep);
+    background:var(--white); padding:11px 14px; border-radius:10px;
+    font-size:0.9rem; color:var(--ink);
+  }
+  input[type="text"]:focus{outline:none; border-color:var(--gold);}
+
+  .q-box{
+    display:flex; align-items:center; gap:10px;
+    margin-top:8px;
+    border:1.5px solid var(--cream-deep);
+    background:var(--white);
+    border-radius:12px;
+    padding:8px 10px;
+  }
+  .q-box input[type="text"]{
+    border:none; padding:6px 4px; flex:1;
+  }
+  .q-box input[type="text"]:focus{outline:none;}
+  .mic-btn.small{
+    width:36px; height:36px; font-size:1rem;
+  }
+
+  .voice-box{
+    margin-top:8px;
+    border:1.5px solid var(--cream-deep);
+    background:var(--white);
+    border-radius:14px;
+    padding:16px;
+  }
+  .voice-row{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:10px;
+  }
+  .mic-btn{
+    width:44px; height:44px; border-radius:50%;
+    background:var(--navy); border:none;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0;
+    font-size:1.2rem;
+  }
+  .mic-btn.recording{
+    background:#c0392b;
+    animation:pulse 1.2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(192,57,43,0.5);}
+    70%{box-shadow:0 0 0 12px rgba(192,57,43,0);}
+    100%{box-shadow:0 0 0 0 rgba(192,57,43,0);}
+  }
+  .voice-hint{font-size:0.78rem; color:#888; line-height:1.4;}
+  textarea{
+    width:100%; min-height:120px;
+    border:none; background:var(--cream);
+    border-radius:10px; padding:12px;
+    font-size:0.88rem; color:var(--ink);
+    font-family:inherit; resize:vertical;
+    line-height:1.5;
+  }
+  textarea:focus{outline:2px solid var(--gold-soft);}
+
+  .example-note{
+    font-size:0.74rem; color:#999; margin-top:8px; font-style:italic;
+  }
+
+  .generate-btn{
+    width:100%; margin-top:22px;
+    background:var(--navy); color:var(--cream);
+    border:none; padding:14px; border-radius:10px;
+    font-size:0.95rem; font-weight:700; cursor:pointer;
+  }
+  .generate-btn:disabled{background:#ccc; cursor:wait;}
+
+  .error-box{
+    display:none;
+    margin-top:14px; background:#fde8e8; border:1px solid #e0a0a0;
+    color:#8a2f2f; padding:12px 14px; border-radius:10px; font-size:0.82rem;
+  }
+  .error-box.show{display:block;}
+
+  /* result */
+  .result{
+    display:none;
+    margin-top:26px;
+    background:var(--white);
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 8px 20px rgba(31,58,95,0.12);
+  }
+  .result.show{display:block;}
+  .result-header{
+    background:linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    padding:14px 18px;
+    color:var(--gold-soft);
+    font-size:0.78rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.04em;
+  }
+  .result-body{padding:18px;}
+  .result-title{font-size:1.1rem; font-weight:700; color:var(--navy-deep); margin-bottom:10px;}
+  .result-meta{font-size:0.82rem; color:#777; margin-bottom:12px;}
+  .result-desc{font-size:0.88rem; color:#4a4a4a; line-height:1.55; margin-bottom:14px;}
+  .field-row{
+    display:flex; justify-content:space-between;
+    font-size:0.8rem; padding:6px 0;
+    border-top:1px solid #f0ead0;
+  }
+  .field-row .label{color:#888;}
+  .field-row .value{color:var(--ink); font-weight:600; text-align:right; max-width:60%;}
+
+  .confidence-box{
+    margin-top:14px;
+    background:#fff8e6; border:1px solid var(--gold-soft);
+    border-radius:10px; padding:12px 14px;
+    font-size:0.78rem; color:#7a6420;
+  }
+  .confidence-box strong{display:block; margin-bottom:5px; color:var(--navy-deep);}
+
+  .confirm-btn{
+    width:100%; margin-top:18px;
+    background:var(--gold-soft); color:var(--navy-deep);
+    border:none; padding:13px; border-radius:10px;
+    font-size:0.9rem; font-weight:700; cursor:pointer;
+  }
+  .saved-note{
+    text-align:center; font-size:0.76rem; color:#888; margin-top:8px;
+  }
+
+  .logo-img{height:26px; display:block;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <header>
+    <button class="back-btn" onclick="history.back()">&#8249;</button>
+    <img src="logo.png" alt="WunnaGo" class="logo-img">
+    <div style="width:34px;"></div>
+  </header>
+
+  <div class="content">
+    <h1>Tell us about what you do</h1>
+    <div class="subtitle">Talk us through it like you're telling a friend. We'll turn it into a listing for you nothing goes live until you approve it.</div>
+
+    <label for="hostName">Your name</label>
+    <input type="text" id="hostName" placeholder="e.g. Anderson">
+
+    <label for="q1">What do you make or do?</label>
+    <div class="q-box">
+      <button class="mic-btn small" onclick="toggleMic(this)">🎙️</button>
+      <input type="text" id="q1" placeholder="e.g. I make coconut bread, fresh most mornings">
+    </div>
+
+    <label for="q2">How long have you been doing this?</label>
+    <div class="q-box">
+      <button class="mic-btn small" onclick="toggleMic(this)">🎙️</button>
+      <input type="text" id="q2" placeholder="e.g. Since I was a girl, my grandmother taught me">
+    </div>
+
+    <label for="q3">What should a visitor expect?</label>
+    <div class="q-box">
+      <button class="mic-btn small" onclick="toggleMic(this)">🎙️</button>
+      <input type="text" id="q3" placeholder="e.g. Come by around 7, help me mix it, we talk while it bakes, about 45 minutes, they leave with a loaf, $10 covers it">
+    </div>
+
+    <div class="example-note">Tap the mic to simulate recording, or just type. (Voice-to-text is the real product experience typing stands in for it here.)</div>
+
+    <button class="generate-btn" id="generateBtn" onclick="generateListing()">Generate my listing</button>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="result" id="result"></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+let lastGenerated = null;
+
+function toggleMic(btn){
+  btn.classList.toggle("recording");
+  btn.textContent = btn.classList.contains("recording") ? "⏹️" : "🎙️";
+  // Purely visual — real speech-to-text would hook in here per question.
+}
+
+function fmt(label, value){
+  if(!value) return "";
+  return `<div class="field-row"><span class="label">${label}</span><span class="value">${value}</span></div>`;
+}
+
+async function generateListing(){
+  const nameInput = document.getElementById("hostName");
+  const q1 = document.getElementById("q1");
+  const q2 = document.getElementById("q2");
+  const q3 = document.getElementById("q3");
+  const btn = document.getElementById("generateBtn");
+  const errorBox = document.getElementById("errorBox");
+  const resultBox = document.getElementById("result");
+
+  const host_name = nameInput.value.trim();
+  const answers = [q1.value.trim(), q2.value.trim(), q3.value.trim()].filter(Boolean);
+
+  errorBox.classList.remove("show");
+  resultBox.classList.remove("show");
+
+  if(answers.length < 2){
+    errorBox.textContent = "Answer at least the first two questions we need more to build a good listing.";
+    errorBox.classList.add("show");
+    return;
+  }
+
+  // Combine the three short answers into one natural transcript for the extraction model.
+  const transcript = [
+    q1.value.trim() ? `What I do: ${q1.value.trim()}` : "",
+    q2.value.trim() ? `How long I've done it: ${q2.value.trim()}` : "",
+    q3.value.trim() ? `What a visitor should expect: ${q3.value.trim()}` : ""
+  ].filter(Boolean).join(". ");
+
+  btn.disabled = true;
+  btn.textContent = "Listening and writing your listing...";
+
+  try{
+    const res = await fetch(`${API_BASE}/api/generate-listing`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ transcript, host_name })
+    });
+    if(!res.ok){
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.detail || "Something went wrong generating the listing.");
+    }
+    const listing = await res.json();
+    lastGenerated = listing;
+    renderResult(listing);
+  } catch(e){
+    errorBox.textContent = "Couldn't generate a listing: " + e.message + ". Check the backend is running.";
+    errorBox.classList.add("show");
+  }
+
+  btn.disabled = false;
+  btn.textContent = "Generate my listing";
+}
+
+function renderResult(l){
+  const resultBox = document.getElementById("result");
+
+  const confidence = (l.confidence_flags && l.confidence_flags.length) ? `
+    <div class="confidence-box">
+      <strong>Double-check these before you publish</strong>
+      ${l.confidence_flags.map(f => `• ${f}`).join("<br>")}
+    </div>
+  ` : "";
+
+  resultBox.innerHTML = `
+    <div class="result-header">This is what visitors will see</div>
+    <div class="result-body">
+      <div class="result-title">${l.title || "Untitled experience"}</div>
+      <div class="result-meta">${l.host_name || "You"} &middot; ${(l.host_type||"").replace(/_/g," ")}</div>
+      <div class="result-desc">${l.description || ""}</div>
+
+      ${fmt("Duration", l.duration_minutes ? l.duration_minutes + " mins" : "")}
+      ${fmt("Where", (l.location_type||"").replace(/_/g," "))}
+      ${fmt("Best time", l.best_time)}
+      ${fmt("What to bring", l.what_to_bring)}
+      ${fmt("Physical demand", l.physical_demand)}
+      ${fmt("Fee", l.fee_note)}
+      ${fmt("Good for", (l.suitable_for||[]).join(", "))}
+
+      ${confidence}
+
+      <button class="confirm-btn" onclick="window.location.href='host-video.html?title=' + encodeURIComponent('${l.title}')">Looks good, add a video</button>
+      <div class="saved-note">This listing is already saved. You can keep refining it later.</div>
+    </div>
+  `;
+  resultBox.classList.add("show");
+  resultBox.scrollIntoView({behavior:"smooth", block:"start"});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WunnaGo Verify Identity</title>
+<style>
+  :root{
+    --cream: #FBF3D6; --cream-deep: #F5EAC0;
+    --navy: #1F3A5F; --navy-deep: #16283F;
+    --gold: #C79A2E; --gold-soft: #E8C468;
+    --ink: #2B2B2B; --white: #FFFFFF; --grey: #B9C0C9;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--cream); color: var(--ink);
+    display:flex; justify-content:center; min-height:100vh;
+  }
+  .phone{width:100%; max-width:420px; min-height:100vh; background:var(--cream); display:flex; flex-direction:column;}
+
+  header{display:flex; align-items:center; justify-content:space-between; padding:18px 20px 6px;}
+  .back-btn{
+    width:34px; height:34px; background:var(--white); border-radius:50%; border:none;
+    display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:var(--navy); cursor:pointer;
+  }
+  .logo-img{height:26px; display:block;}
+
+  .content{padding:14px 24px 40px; flex:1;}
+  h1{font-size:1.3rem; color:var(--navy-deep); margin-bottom:10px; line-height:1.3;}
+  .desc-line{font-size:0.86rem; color:#555; margin-bottom:4px; line-height:1.4;}
+  .safe-line{font-size:0.82rem; color:#888; margin-bottom:16px;}
+  hr{border:none; border-top:2px solid var(--gold-soft); width:56px; margin-bottom:22px;}
+
+  .id-slot{
+    background:var(--cream-deep);
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:18px;
+    text-align:center;
+  }
+  .id-card{
+    width:100%; max-width:240px; margin:0 auto 10px;
+    background:var(--white); border-radius:8px;
+    padding:12px; display:flex; align-items:center; gap:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  }
+  .id-card .avatar-box{
+    width:34px; height:34px; border-radius:4px; background:#c0392b; flex-shrink:0;
+  }
+  .id-card .lines{flex:1;}
+  .id-card .lines div{height:6px; background:#d8d8d8; border-radius:3px; margin-bottom:5px;}
+  .id-card .lines div:last-child{width:60%; margin-bottom:0;}
+  .id-card.back-style{justify-content:flex-start;}
+  .id-card.back-style .chip{width:24px; height:18px; background:#c8a232; border-radius:3px;}
+  .id-card.back-style .stripe{height:14px; background:#444; width:100%; border-radius:2px; margin:6px 0;}
+  .id-card.back-style .dots{display:flex; gap:4px;}
+  .id-card.back-style .dots span{width:6px; height:6px; border-radius:50%; background:#bbb;}
+
+  .id-label{font-size:0.82rem; font-weight:700; color:var(--navy-deep);}
+  .id-preview{
+    width:100%; max-width:240px; margin:0 auto 10px;
+    border-radius:8px; display:block;
+  }
+  .captured-badge{
+    display:inline-block; font-size:0.72rem; font-weight:700; color:#1a7a3a;
+    background:#e3f6e8; padding:3px 9px; border-radius:12px; margin-top:4px;
+  }
+
+  .file-input{display:none;}
+  .action-btn{
+    width:100%; padding:13px; border-radius:10px; border:none;
+    font-size:0.88rem; font-weight:700; cursor:pointer; margin-bottom:10px;
+  }
+  .action-btn.primary{background:var(--navy); color:var(--cream);}
+  .action-btn.secondary{background:var(--grey); color:var(--navy-deep);}
+  .action-btn:disabled{opacity:0.5; cursor:not-allowed;}
+
+  .prototype-note{
+    text-align:center; font-size:0.74rem; color:#999; margin-top:6px; line-height:1.4;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <header>
+    <button class="back-btn" onclick="history.back()">&#8249;</button>
+    <img src="logo.png" alt="WunnaGo" class="logo-img">
+    <div style="width:34px;"></div>
+  </header>
+
+  <div class="content">
+    <h1>First, let's verify your identity</h1>
+    <div class="desc-line">Take a photo of the front and back of your ID</div>
+    <div class="safe-line">Don't worry, we'll keep your information safe</div>
+    <hr>
+
+    <div class="id-slot">
+      <div id="frontPreviewWrap">
+        <div class="id-card">
+          <div class="avatar-box"></div>
+          <div class="lines"><div></div><div></div><div></div></div>
+        </div>
+      </div>
+      <div class="id-label">Front of ID</div>
+      <div id="frontBadge"></div>
+    </div>
+
+    <div class="id-slot">
+      <div id="backPreviewWrap">
+        <div class="id-card back-style" style="flex-direction:column; align-items:stretch;">
+          <div class="chip"></div>
+          <div class="stripe"></div>
+          <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="id-label">Back of ID</div>
+      <div id="backBadge"></div>
+    </div>
+
+    <input type="file" id="frontInput" class="file-input" accept="image/*" capture="environment" onchange="handleCapture(event,'front')">
+    <input type="file" id="backInput" class="file-input" accept="image/*" capture="environment" onchange="handleCapture(event,'back')">
+
+    <button class="action-btn primary" id="mainBtn" onclick="triggerCapture()">Take a photo of front of ID</button>
+    <button class="action-btn secondary" onclick="resetCapture()">Use another ID</button>
+
+    <div class="prototype-note">Prototype photos stay on this device only. No real ID verification or storage happens yet.</div>
+  </div>
+</div>
+
+<script>
+let frontDone = false;
+let backDone = false;
+
+function triggerCapture(){
+  if(!frontDone){
+    document.getElementById("frontInput").click();
+  } else if(!backDone){
+    document.getElementById("backInput").click();
+  } else {
+    // Both captured proceed into host onboarding.
+    window.location.href = "Host.html";
+  }
+}
+
+function handleCapture(event, side){
+  const file = event.target.files[0];
+  if(!file) return;
+  const url = URL.createObjectURL(file);
+
+  const wrap = document.getElementById(side + "PreviewWrap");
+  wrap.innerHTML = `<img src="${url}" class="id-preview" alt="${side} of ID">`;
+  document.getElementById(side + "Badge").innerHTML = `<span class="captured-badge">✓ Captured</span>`;
+
+  if(side === "front") frontDone = true;
+  if(side === "back") backDone = true;
+
+  updateMainButton();
+}
+
+function updateMainButton(){
+  const btn = document.getElementById("mainBtn");
+  if(!frontDone){
+    btn.textContent = "Take a photo of front of ID";
+  } else if(!backDone){
+    btn.textContent = "Take a photo of back of ID";
+  } else {
+    btn.textContent = "Continue";
+  }
+}
+
+function resetCapture(){
+  frontDone = false;
+  backDone = false;
+  document.getElementById("frontPreviewWrap").innerHTML = `
+    <div class="id-card">
+      <div class="avatar-box"></div>
+      <div class="lines"><div></div><div></div><div></div></div>
+    </div>`;
+  document.getElementById("backPreviewWrap").innerHTML = `
+    <div class="id-card back-style" style="flex-direction:column; align-items:stretch;">
+      <div class="chip"></div><div class="stripe"></div>
+      <div class="dots"><span></span><span></span><span></span></div>
+    </div>`;
+  document.getElementById("frontBadge").innerHTML = "";
+  document.getElementById("backBadge").innerHTML = "";
+  updateMainButton();
+}
+</script>
+</body>
+</html>

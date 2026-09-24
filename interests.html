@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WunnaGo - Interests</title>
+<style>
+  :root{
+    --cream: #FBF3D6; --cream-deep: #F5EAC0;
+    --navy: #1F3A5F; --navy-deep: #16283F;
+    --gold: #C79A2E; --gold-soft: #E8C468;
+    --ink: #2B2B2B; --white: #FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--cream); color: var(--ink);
+    display:flex; justify-content:center; min-height:100vh;
+  }
+  .phone{width:100%; max-width:420px; min-height:100vh; background:var(--cream); display:flex; flex-direction:column;}
+
+  header{display:flex; align-items:center; justify-content:space-between; padding:18px 20px 6px;}
+  .back-btn{
+    width:34px; height:34px; background:var(--white); border-radius:50%; border:none;
+    display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:var(--navy); cursor:pointer;
+  }
+  .logo-img{height:26px; display:block;}
+
+  .content{padding:14px 24px 40px; flex:1;}
+  h1{font-size:1.4rem; color:var(--navy-deep); margin-bottom:6px;}
+  .subtitle{font-size:0.86rem; color:#777; margin-bottom:6px; line-height:1.4;}
+  hr{border:none; border-top:2px solid var(--gold-soft); width:56px; margin:14px 0 20px;}
+
+  .chip-grid{
+    display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px;
+  }
+  .chip{
+    border:1.5px solid var(--cream-deep); background:var(--white);
+    color:var(--ink); padding:11px 16px; border-radius:24px;
+    font-size:0.85rem; font-weight:600; cursor:pointer;
+  }
+  .chip.selected{background:var(--navy); border-color:var(--navy); color:var(--cream);}
+  .chip.disabled{opacity:0.4; cursor:not-allowed;}
+
+  .limit-note{font-size:0.76rem; color:#999; margin:-14px 0 20px;}
+
+  label{display:block; font-size:0.86rem; font-weight:700; color:var(--navy-deep); margin-bottom:8px;}
+  .intent-box{
+    display:flex; align-items:center; gap:10px;
+    border:1.5px solid var(--cream-deep); background:var(--white);
+    border-radius:12px; padding:12px 14px; margin-bottom:26px;
+  }
+  .intent-box input{
+    flex:1; border:none; font-size:0.88rem; color:var(--ink); background:none;
+  }
+  .intent-box input:focus{outline:none;}
+
+  .continue-btn{
+    width:100%; background:var(--navy); color:var(--cream);
+    border:none; padding:14px; border-radius:10px;
+    font-size:0.95rem; font-weight:700; cursor:pointer;
+  }
+  .continue-btn:disabled{background:#ccc; cursor:wait;}
+  .hint{text-align:center; font-size:0.76rem; color:#999; margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <header>
+    <button class="back-btn" onclick="history.back()">&#8249;</button>
+    <img src="logo.png" alt="WunnaGo" class="logo-img">
+    <div style="width:34px;"></div>
+  </header>
+
+  <div class="content">
+    <h1>Choose up to 5 interests</h1>
+    <div class="subtitle">Pick a few hobbies and experiences that will help us connect you to your ideal host!</div>
+    <hr>
+
+    <div class="chip-grid" id="chipGrid"></div>
+    <div class="limit-note" id="limitNote"></div>
+
+    <label for="intentInput">Anything you'd like to include?</label>
+    <div class="intent-box">
+      <span>🎙️</span>
+      <input type="text" id="intentInput" placeholder="Type or tap the mic to answer">
+    </div>
+
+    <button class="continue-btn" id="continueBtn" onclick="continueToDiscover()">Continue</button>
+    <div class="hint">Your answers help us find the right match — they're not a filter, just a starting point.</div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+const MAX_INTERESTS = 5;
+
+const INTERESTS = [
+  "food and drink", "craft and making", "music and dance", "quiet and slow",
+  "nature and hikes", "history and heritage", "sports and games", "fishing and sea",
+  "art and photography"
+];
+
+let selected = [];
+renderChips(); // populate the grid on first load — was missing before
+
+function renderChips(){
+  const grid = document.getElementById("chipGrid");
+  grid.innerHTML = INTERESTS.map(tag => {
+    const isSelected = selected.includes(tag);
+    const atLimit = selected.length >= MAX_INTERESTS && !isSelected;
+    return `<button class="chip ${isSelected ? 'selected':''} ${atLimit ? 'disabled':''}" onclick="toggleChip('${tag}')">${tag}</button>`;
+  }).join("");
+
+  const note = document.getElementById("limitNote");
+  note.textContent = selected.length >= MAX_INTERESTS
+    ? "You've picked 5 — that's the max. Deselect one to change your choices."
+    : `${selected.length} of ${MAX_INTERESTS} selected`;
+}
+
+function toggleChip(tag){
+  if(selected.includes(tag)){
+    selected = selected.filter(t => t !== tag);
+  } else if(selected.length < MAX_INTERESTS){
+    selected.push(tag);
+  }
+  renderChips();
+}
+
+async function continueToDiscover(){
+  const intentInput = document.getElementById("intentInput");
+  const btn = document.getElementById("continueBtn");
+  const freeText = intentInput.value.trim();
+
+  // Build one combined intent string: free text carries the most meaning,
+  // interests are folded in as supporting context — same pattern the
+  // matching prompt on the backend expects.
+  const combinedIntent = freeText
+    ? freeText
+    : (selected.length ? `Interested in: ${selected.join(", ")}` : "");
+
+  if(!combinedIntent){
+    intentInput.placeholder = "Tell us a little about what you're looking for...";
+    intentInput.focus();
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Finding your matches...";
+
+  // Pass everything to discover.html via URL params — it auto-runs the match on load.
+  const params = new URLSearchParams({
+    intent: combinedIntent,
+    interests: selected.join(",")
+  });
+  window.location.href = `discover.html?${params.toString()}`;
+}
+</script>
+</body>
+</html>

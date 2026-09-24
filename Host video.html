@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WunnaGo - Add a Video</title>
+<style>
+  :root{
+    --cream: #FBF3D6;
+    --cream-deep: #F5EAC0;
+    --navy: #1F3A5F;
+    --navy-deep: #16283F;
+    --gold: #C79A2E;
+    --gold-soft: #E8C468;
+    --ink: #2B2B2B;
+    --white: #FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    display:flex; justify-content:center;
+    min-height:100vh;
+  }
+  .phone{
+    width:100%; max-width:420px; min-height:100vh;
+    background: var(--cream);
+    display:flex; flex-direction:column;
+  }
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px 6px;
+  }
+  .back-btn{
+    width:34px; height:34px; background:var(--white);
+    border-radius:50%; border:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem; color:var(--navy); cursor:pointer;
+  }
+  .logo{font-size:1.3rem; font-weight:800; color:var(--navy);}
+  .logo .go{color:var(--gold);}
+
+  .content{padding:14px 20px 40px; flex:1;}
+  h1{font-size:1.3rem; color:var(--navy-deep); margin-bottom:6px;}
+  .subtitle{font-size:0.86rem; color:#666; margin-bottom:22px; line-height:1.45;}
+
+  .panel{
+    background:var(--white); border-radius:14px;
+    padding:18px; margin-bottom:16px;
+  }
+  .panel-icon{font-size:1.3rem; margin-bottom:8px;}
+  .panel-title{font-weight:700; font-size:0.92rem; color:var(--navy-deep); margin-bottom:4px;}
+  .panel-sub{font-size:0.8rem; color:#888; margin-bottom:14px; line-height:1.4;}
+
+  .file-input{display:none;}
+  .upload-btn, .script-btn{
+    width:100%; padding:11px; border-radius:10px;
+    border:1.5px solid var(--navy); background:var(--white);
+    color:var(--navy); font-weight:700; font-size:0.86rem;
+    cursor:pointer;
+  }
+  .upload-btn:active, .script-btn:active{background:var(--cream-deep);}
+
+  .preview-box{
+    margin-top:12px; display:none;
+  }
+  .preview-box.show{display:block;}
+  .preview-box video{
+    width:100%; border-radius:10px; max-height:220px; background:#000;
+  }
+  .file-name{
+    font-size:0.78rem; color:#666; margin-top:6px;
+    word-break:break-all;
+  }
+
+  .script-box{
+    display:none;
+    margin-top:14px;
+    background:var(--cream);
+    border:1px dashed var(--gold);
+    border-radius:10px;
+    padding:14px;
+    font-size:0.88rem;
+    line-height:1.55;
+    color:var(--ink);
+    font-style:italic;
+  }
+  .script-box.show{display:block;}
+  .script-loading{
+    display:none; font-size:0.82rem; color:#888; margin-top:10px;
+  }
+  .script-loading.show{display:block;}
+
+  .continue-btn{
+    width:100%; margin-top:8px;
+    background:var(--navy); color:var(--cream);
+    border:none; padding:14px; border-radius:10px;
+    font-size:0.95rem; font-weight:700; cursor:pointer;
+  }
+  .skip-note{
+    text-align:center; font-size:0.78rem; color:#999; margin-top:10px;
+  }
+  .skip-note a{color:var(--navy); font-weight:600; text-decoration:underline; cursor:pointer;}
+
+  .logo-img{height:26px; display:block;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <header>
+    <button class="back-btn" onclick="history.back()">&#8249;</button>
+    <img src="logo.png" alt="WunnaGo" class="logo-img">
+    <div style="width:34px;"></div>
+  </header>
+
+  <div class="content">
+    <h1>Add a short video</h1>
+    <div class="subtitle">Visitors want to see who they'll meet. 30 to 60 seconds is enough.</div>
+
+    <div class="panel">
+      <div class="panel-icon">📤</div>
+      <div class="panel-title">Already recorded a video?</div>
+      <div class="panel-sub">Upload it from your phone. On mobile, this can open your camera directly.</div>
+      <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Upload video</button>
+      <input type="file" id="fileInput" class="file-input" accept="video/*" capture="user" onchange="handleFile(event)">
+      <div class="preview-box" id="previewBox">
+        <video id="previewVideo" controls></video>
+        <div class="file-name" id="fileName"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-icon">✨</div>
+      <div class="panel-title">Not sure what to say?</div>
+      <div class="panel-sub">We'll turn your earlier answers into a short script you can read while recording.</div>
+      <button class="script-btn" id="scriptBtn" onclick="getScript()">Get your script and record</button>
+      <div class="script-loading" id="scriptLoading">Writing your script...</div>
+      <div class="script-box" id="scriptBox"></div>
+    </div>
+
+    <button class="continue-btn" onclick="window.location.href='discover.html'">Done see it live</button>
+    <div class="skip-note">You can always <a onclick="window.location.href='discover.html'">re-record or replace this later</a></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+
+function getListingTitle(){
+  const params = new URLSearchParams(window.location.search);
+  return params.get("title");
+}
+
+function handleFile(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const url = URL.createObjectURL(file);
+  const video = document.getElementById("previewVideo");
+  video.src = url;
+  document.getElementById("fileName").textContent = file.name + " (" + Math.round(file.size/1024) + " KB) — not yet uploaded to a server; local preview only in this prototype.";
+  document.getElementById("previewBox").classList.add("show");
+}
+
+async function getScript(){
+  const title = getListingTitle();
+  const btn = document.getElementById("scriptBtn");
+  const loading = document.getElementById("scriptLoading");
+  const box = document.getElementById("scriptBox");
+
+  if(!title){
+    box.textContent = "No listing found to write a script for — go back and generate one first.";
+    box.classList.add("show");
+    return;
+  }
+
+  btn.disabled = true;
+  loading.classList.add("show");
+  box.classList.remove("show");
+
+  try{
+    const res = await fetch(`${API_BASE}/api/host-script`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ title })
+    });
+    if(!res.ok) throw new Error("couldn't generate a script");
+    const data = await res.json();
+    box.textContent = data.script;
+    box.classList.add("show");
+  } catch(e){
+    box.textContent = "Couldn't reach the script generator, check the backend is running.";
+    box.classList.add("show");
+  }
+
+  loading.classList.remove("show");
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>
