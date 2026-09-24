@@ -1,0 +1,121 @@
+[
+  {
+    "title": "Sunrise Fish Pot Fishing at Skeete's Bay",
+    "host_type": "fisherman",
+    "description": "Join a seasoned fisherman with thirty years of experience as he heads out from Skeete's Bay at dawn to check his fish pots. Visitors are welcome to watch the process up close and even lend a hand pulling in the pots, making for a memorable and authentic morning on the water.",
+    "duration_minutes": 90,
+    "location_type": "boat",
+    "best_time": "early morning",
+    "what_to_bring": "a hat and shoes that can get wet",
+    "suitable_for": [
+      "adventurous",
+      "culture seekers",
+      "solo travelers",
+      "families"
+    ],
+    "physical_demand": "moderate",
+    "fee_note": "ask host",
+    "confidence_flags": [
+      "Exact departure/return point beyond Skeete's Bay not specified",
+      "Suitability for families is inferred, not explicitly stated",
+      "Physical demand level inferred from activity description (pulling pots)"
+    ],
+    "host_name": "Anderson",
+    "times_shown": 1
+  },
+  {
+    "title": "Saturday Morning Fish Cakes & Bakes in Rock Hall",
+    "host_type": "home cook",
+    "description": "Join a warm Rock Hall kitchen on Saturday mornings to learn the art of making fish cakes and bakes, a recipe cherished by family and friends alike. Guests will cook alongside the host for about 40 minutes before sitting down together to enjoy the freshly made dishes with a kick of hot sauce. It's a cozy, hands-on taste of authentic Bajan home cooking.",
+    "duration_minutes": 75,
+    "location_type": "home",
+    "best_time": "Saturday morning, around 9am",
+    "what_to_bring": "nothing needed",
+    "suitable_for": [
+      "food lovers",
+      "culture seekers",
+      "families"
+    ],
+    "physical_demand": "low",
+    "fee_note": "$15 per person, covers ingredients",
+    "confidence_flags": [
+      "Total duration is estimated since only the 40-minute cooking time was stated; eating time was not specified",
+      "Suitable_for tags (families, culture seekers) inferred from the casual, communal nature of the activity rather than explicitly stated",
+      "Physical demand level inferred as low based on the cooking activity described"
+    ],
+    "host_name": "Marva",
+    "times_shown": 1
+  },
+  {
+    "title": "Handcrafted Mahogany Furniture Making",
+    "host_type": "craftsperson",
+    "description": "Learn the art of mahogany furniture making from a craftsman who has honed his skill since childhood, taught by his father. Visitors get hands-on time in the workshop shaping wood themselves, and can take home a small piece like a coaster as a keepsake.",
+    "duration_minutes": 60,
+    "location_type": "workshop",
+    "best_time": "not specified",
+    "what_to_bring": "clothes you don't mind getting dirty",
+    "suitable_for": [
+      "culture seekers",
+      "families",
+      "adventurous"
+    ],
+    "physical_demand": "moderate",
+    "fee_note": "ask host",
+    "confidence_flags": [
+      "best_time not mentioned by host, left as not specified",
+      "physical_demand inferred from woodworking activity, not explicitly stated",
+      "suitable_for tags inferred rather than directly stated",
+      "fee not mentioned at all"
+    ],
+    "host_name": "Kemar",
+    "times_shown": 1
+  },
+  {
+    "title": "Steelpan Sessions in the Yard",
+    "host_type": "musician",
+    "description": "With twenty years of experience playing steelpan, this host welcomes visitors to join him for an evening in his yard. He'll teach a simple tune on the pan and share a relaxed, musical vibe with anyone who stops by.",
+    "duration_minutes": 60,
+    "location_type": "home",
+    "best_time": "evening",
+    "what_to_bring": "nothing needed",
+    "suitable_for": [
+      "families",
+      "culture seekers",
+      "music lovers",
+      "solo travelers"
+    ],
+    "physical_demand": "low",
+    "fee_note": "no set fee, donations welcome",
+    "confidence_flags": [
+      "Exact session duration not stated, estimated based on 'vibe out for a while'",
+      "Group size not specified",
+      "Skill level or age suitability not specified",
+      "Exact location (specific yard/area) not detailed beyond 'by the yard'"
+    ],
+    "host_name": "Delroy",
+    "times_shown": 1
+  },
+  {
+    "title": "Mahogany Woodworking with a Local Craftsman",
+    "host_type": "craftsperson",
+    "description": "Learn the art of mahogany furniture-making from a craftsman who has honed his skills since childhood, taught by his father. Visitors get hands-on in his workshop, shaping their own piece of wood, and can take home a small item like a coaster as a memento of the experience.",
+    "duration_minutes": 60,
+    "location_type": "workshop",
+    "best_time": "not specified",
+    "what_to_bring": "clothes you don't mind getting dusty or dirty",
+    "suitable_for": [
+      "families",
+      "culture seekers",
+      "hands-on learners"
+    ],
+    "physical_demand": "moderate",
+    "fee_note": "ask host",
+    "confidence_flags": [
+      "best_time not stated by host, left unspecified",
+      "physical_demand inferred from description of shaping wood, not explicitly stated",
+      "suitable_for tags inferred rather than directly stated by host"
+    ],
+    "host_name": "Kemar",
+    "times_shown": 1
+  }
+]
