@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WunnaGo - Book</title>
+<style>
+  :root{
+    --cream: #FBF3D6;
+    --cream-deep: #F5EAC0;
+    --navy: #1F3A5F;
+    --navy-deep: #16283F;
+    --gold: #C79A2E;
+    --gold-soft: #E8C468;
+    --ink: #2B2B2B;
+    --white: #FFFFFF;
+    --star: #E0A526;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+  }
+  .phone{
+    width:100%;
+    max-width:420px;
+    min-height:100vh;
+    background: var(--white);
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* media header */
+  .media{
+    position:relative;
+    height:260px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    background-size:cover;
+    background-position:center;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .media .placeholder-label{
+    color: var(--gold-soft);
+    font-size:0.95rem;
+    font-weight:600;
+    text-transform:capitalize;
+    letter-spacing:0.03em;
+  }
+  .back-btn{
+    position:absolute; top:16px; left:16px;
+    width:34px; height:34px;
+    background:rgba(255,255,255,0.9);
+    border-radius:50%;
+    border:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem;
+    color:var(--navy);
+    cursor:pointer;
+  }
+  .save-btn{
+    position:absolute; top:16px; right:16px;
+    width:34px; height:34px;
+    background:rgba(255,255,255,0.9);
+    border-radius:8px;
+    border:none;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+
+  .content{
+    padding:18px 20px 100px;
+    flex:1;
+  }
+
+  .host-row{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .host-avatar{
+    width:40px; height:40px; border-radius:50%;
+    background:var(--navy); color:var(--cream);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1rem; font-weight:700;
+  }
+  .host-meta{flex:1;}
+  .host-name{font-weight:700; font-size:0.98rem; color:var(--navy-deep);}
+  .host-sub{font-size:0.78rem; color:#777; margin-top:1px;}
+  .rating{font-size:0.82rem; color:#555; display:flex; align-items:center; gap:3px; white-space:nowrap;}
+  .rating .star{color:var(--star);}
+
+  h1{
+    font-size:1.25rem;
+    color:var(--navy-deep);
+    margin-bottom:6px;
+    line-height:1.3;
+  }
+  .price-duration{
+    display:flex; align-items:center; gap:10px;
+    font-size:0.9rem;
+    color:var(--navy);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  .price-duration .dot{color:#bbb; font-weight:400;}
+
+  .description{
+    font-size:0.9rem;
+    color:#4a4a4a;
+    line-height:1.55;
+    margin-bottom:22px;
+  }
+
+  .badge-row{
+    display:flex; flex-wrap:wrap; gap:6px;
+    margin-bottom:22px;
+  }
+  .badge{
+    background:var(--cream-deep);
+    color:var(--navy-deep);
+    font-size:0.72rem;
+    font-weight:600;
+    padding:5px 10px;
+    border-radius:20px;
+    text-transform:capitalize;
+  }
+
+  .section-label{
+    font-size:0.8rem;
+    font-weight:700;
+    color:var(--navy-deep);
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    margin-bottom:10px;
+  }
+
+  .day-row, .time-row{
+    display:flex; gap:8px;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    border:1.5px solid var(--cream-deep);
+    background:var(--white);
+    color:var(--ink);
+    padding:9px 14px;
+    border-radius:10px;
+    font-size:0.85rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .chip.selected{
+    background:var(--gold-soft);
+    border-color:var(--gold-soft);
+    color:var(--navy-deep);
+  }
+  .chip small{display:block; font-weight:400; font-size:0.68rem; color:#888;}
+  .chip.selected small{color:var(--navy-deep); opacity:0.75;}
+
+  .note-box{
+    background:var(--cream-deep);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:0.82rem;
+    color:#5a5238;
+    margin-bottom:10px;
+    display:none;
+  }
+  .note-box.show{display:block;}
+
+  .confidence-box{
+    background:#fff8e6;
+    border:1px solid var(--gold-soft);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:0.78rem;
+    color:#7a6420;
+    margin-top:4px;
+    display:none;
+  }
+  .confidence-box.show{display:block;}
+  .confidence-box strong{display:block; margin-bottom:4px; color:var(--navy-deep);}
+
+  /* sticky footer */
+  .footer-bar{
+    position:fixed;
+    bottom:0; left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:420px;
+    background:var(--white);
+    border-top:1px solid #eee6c8;
+    padding:14px 20px 20px;
+  }
+  .book-btn{
+    width:100%;
+    background:var(--navy);
+    color:var(--cream);
+    border:none;
+    padding:14px;
+    border-radius:10px;
+    font-size:0.95rem;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .book-btn:disabled{
+    background:#ccc;
+    cursor:not-allowed;
+  }
+  .book-btn:not(:disabled):active{background:var(--navy-deep);}
+  .footer-hint{
+    text-align:center;
+    font-size:0.72rem;
+    color:#999;
+    margin-top:6px;
+  }
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <!-- filled by JS -->
+</div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+
+// Fallback sample if no listing is passed in (e.g. opened directly for preview)
+const FALLBACK_LISTING = {
+  title: "make fishcakes with Gloria",
+  host_name: "Gloria",
+  location_type: "home",
+  duration_minutes: 30,
+  description: "Gloria has run her stall for over 15 years. Pull up, learn how to make a batch of a Bajan classic, fishcakes, then eat them straight off the pan.",
+  suitable_for: ["food lovers", "culture seekers"],
+  fee_note: "$15 per person"
+};
+
+const DAYS = [
+  { label: "Tue", sub: "22nd" },
+  { label: "Wed", sub: "23rd" },
+  { label: "Thur", sub: "24th" },
+  { label: "Fri", sub: "25th" }
+];
+const TIMES = ["8:00 am", "11:30 am", "2:00 pm"];
+
+let selectedDay = 1; // default matches mockup (Wed selected)
+let selectedTime = 1; // default matches mockup (11:30am selected)
+let listing = FALLBACK_LISTING;
+
+function initials(name){
+  if(!name) return "?";
+  return name.split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
+}
+
+function priceLabel(l){
+  return l.price || l.fee_note || "Ask host";
+}
+
+function render(){
+  const l = listing;
+  const phone = document.getElementById("phone");
+
+  const badges = (l.suitable_for || []).map(tag =>
+    `<span class="badge">${tag}</span>`
+  ).join("");
+
+  const dayChips = DAYS.map((d,i) => `
+    <button class="chip ${i===selectedDay ? 'selected':''}" onclick="selectDay(${i})">
+      ${d.label}<small>${d.sub}</small>
+    </button>
+  `).join("");
+
+  const timeChips = TIMES.map((t,i) => `
+    <button class="chip ${i===selectedTime ? 'selected':''}" onclick="selectTime(${i})">${t}</button>
+  `).join("");
+
+  const hasConfidence = l.confidence_flags && l.confidence_flags.length;
+  const confidenceHtml = hasConfidence ? `
+    <div class="confidence-box show">
+      <strong>Worth confirming with the host</strong>
+      ${l.confidence_flags.map(f => `• ${f}`).join("<br>")}
+    </div>
+  ` : "";
+
+  phone.innerHTML = `
+    <div class="media" style="${l.image ? `background-image:url('${l.image}')` : ''}">
+      <button class="back-btn" onclick="history.back()">&#8249;</button>
+      <button class="save-btn">🔖</button>
+      ${!l.image ? `<span class="placeholder-label">${(l.host_type||'experience').replace(/_/g,' ')}</span>` : ''}
+    </div>
+
+    <div class="content">
+      <div class="host-row">
+        <div class="host-avatar">${initials(l.host_name)}</div>
+        <div class="host-meta">
+          <div class="host-name">${l.host_name || "Host"}</div>
+          <div class="host-sub">${(l.host_type || "").replace(/_/g," ")}</div>
+        </div>
+        ${l.rating ? `<span class="rating"><span class="star">★</span> ${l.rating}${l.reviews ? ` · ${l.reviews} guests hosted` : ''}</span>` : ''}
+      </div>
+
+      <h1>${l.title}</h1>
+      <div class="price-duration">
+        <span>${priceLabel(l)}</span>
+        ${l.duration_minutes ? `<span class="dot">&middot;</span><span>${l.duration_minutes} mins</span>` : ''}
+      </div>
+
+      <div class="description">${l.description || ""}</div>
+
+      ${badges ? `<div class="badge-row">${badges}</div>` : ''}
+
+      <div class="section-label">Choose a day</div>
+      <div class="day-row">${dayChips}</div>
+
+      <div class="section-label">Choose a time</div>
+      <div class="time-row">${timeChips}</div>
+
+      ${confidenceHtml}
+    </div>
+
+    <div class="footer-bar">
+      <button class="book-btn" onclick="confirmBooking()">Book this experience</button>
+      <div class="footer-hint">You won't be charged yet — payment is arranged directly with the host.</div>
+    </div>
+  `;
+}
+
+function selectDay(i){ selectedDay = i; render(); }
+function selectTime(i){ selectedTime = i; render(); }
+
+function confirmBooking(){
+  const day = DAYS[selectedDay];
+  const time = TIMES[selectedTime];
+  alert(`Booking request sent to ${listing.host_name} for ${day.label} ${day.sub} at ${time}.\n\n(This is a prototype — no real booking or payment has occurred.)`);
+}
+
+// Load listing: prefer one passed via ?title=... from discover.html, else first real listing, else fallback sample.
+async function loadListing(){
+  const params = new URLSearchParams(window.location.search);
+  const wantedTitle = params.get("title");
+
+  try{
+    const res = await fetch(`${API_BASE}/api/listings`);
+    if(!res.ok) throw new Error("no listings endpoint");
+    const data = await res.json();
+    if(Array.isArray(data) && data.length){
+      if(wantedTitle){
+        const match = data.find(x => x.title === wantedTitle);
+        listing = match || data[0];
+      } else {
+        listing = data[0];
+      }
+    }
+  } catch(e){
+    // keep FALLBACK_LISTING
+  }
+  render();
+}
+
+loadListing();
+</script>
+</body>
+</html>
