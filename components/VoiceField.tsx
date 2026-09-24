@@ -107,26 +107,19 @@ export function VoiceField({
     setMessage("");
   };
 
-  const requestMicPermission = async () => {
-    if (!window.isSecureContext) {
-      throw new Error("insecure-context");
-    }
-
-    // Requesting getUserMedia first gives a predictable browser permission prompt.
-    // We immediately release this stream because SpeechRecognition manages its own capture.
-    if (navigator.mediaDevices?.getUserMedia) {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach((track) => track.stop());
-    }
-  };
-
-  const startListening = async () => {
+  const startListening = () => {
     if (shouldKeepListeningRef.current || listening) {
       stopListening();
       return;
     }
 
     setMessage("");
+
+    if (!window.isSecureContext) {
+      setMessage(secureContextLabel);
+      return;
+    }
+
     const w = window as any;
     const SpeechRecognition = w.SpeechRecognition || w.webkitSpeechRecognition;
 
@@ -136,20 +129,9 @@ export function VoiceField({
     }
 
     try {
-      await requestMicPermission();
-    } catch (error) {
-      const reason = error instanceof Error ? error.message : "";
-      setMessage(reason === "insecure-context" ? secureContextLabel : permissionErrorLabel);
-      return;
-    }
-
-    try {
       const recognition: RecognitionLike = new SpeechRecognition();
       recognition.lang = speechLang;
       recognition.interimResults = true;
-
-      // Some browsers still end a recognition session after a pause even when continuous=true.
-      // We therefore use BOTH continuous mode and an onend auto-restart loop below.
       recognition.continuous = true;
       recognition.maxAlternatives = 1;
       recognitionRef.current = recognition;
@@ -167,10 +149,11 @@ export function VoiceField({
         sessionFinalTextRef.current = "";
 
         try {
+          // Keep this call synchronous with the original button click on the first
+          // session. Chrome/Safari may refuse microphone capture if recognition is
+          // started only after awaiting a separate permission request.
           recognition.start();
         } catch {
-          // Chrome can briefly report InvalidStateError if restarted too quickly.
-          // Retry once the recognizer has fully settled.
           clearRestartTimer();
           restartTimerRef.current = setTimeout(() => {
             if (!shouldKeepListeningRef.current || fatalErrorRef.current) return;
@@ -194,8 +177,6 @@ export function VoiceField({
         let finalText = "";
         let interimText = "";
 
-        // Rebuild the CURRENT recognition session from all results instead of
-        // appending blindly. This prevents duplicated words after auto-restarts.
         for (let i = 0; i < event.results.length; i++) {
           const transcript = event.results[i][0]?.transcript || "";
           if (event.results[i].isFinal) finalText += `${transcript} `;
@@ -203,23 +184,18 @@ export function VoiceField({
         }
 
         sessionFinalTextRef.current = finalText.trim();
-
         const committedForSession = joinSpeech(
           sessionBaseTextRef.current,
           sessionFinalTextRef.current
         );
 
-        // Save only FINAL speech as committed. Interim speech is shown live but
-        // intentionally not carried into the next auto-restarted session.
         committedTextRef.current = committedForSession;
-
         onChange(joinSpeech(committedForSession, interimText));
       };
 
       recognition.onerror = (event) => {
         const code = event?.error || "";
 
-        // Manual stop/abort can emit an error in some Chromium builds.
         if (!shouldKeepListeningRef.current && code === "aborted") return;
 
         if (code === "not-allowed" || code === "service-not-allowed") {
@@ -243,11 +219,8 @@ export function VoiceField({
           setListening(false);
           setMessage("Speech recognition lost its connection. Check your internet and tap the mic to try again.");
         } else if (code === "no-speech") {
-          // IMPORTANT: no-speech is recoverable. Chrome frequently emits this after
-          // a short pause. onend will automatically start another listening session.
           setMessage("Still listening — you can keep talking, or tap the mic to stop.");
         } else if (code !== "aborted") {
-          // Treat other transient recognition errors as recoverable; onend restarts.
           setMessage("Still listening — if speech does not appear, tap the mic twice to restart.");
         }
       };
@@ -258,9 +231,6 @@ export function VoiceField({
           return;
         }
 
-        // Browsers are allowed to terminate Web Speech recognition after silence,
-        // especially on mobile. Keep the UI in listening mode and transparently
-        // open a fresh recognition session until the USER taps the mic to stop.
         setListening(true);
         clearRestartTimer();
         restartTimerRef.current = setTimeout(beginRecognitionSession, 180);
