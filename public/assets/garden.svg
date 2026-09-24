@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#bfe5e4"/><stop offset="1" stop-color="#f6df9f"/></linearGradient></defs>
+  <rect width="900" height="580" fill="url(#sky)"/><rect y="320" width="900" height="260" fill="#6f9c55"/>
+  <path d="M0 450q130-80 260 0t260 0t380 0v130H0z" fill="#47783d"/>
+  <g fill="#2f6b38"><ellipse cx="150" cy="355" rx="55" ry="95"/><ellipse cx="235" cy="340" rx="50" ry="105"/><ellipse cx="690" cy="360" rx="70" ry="115"/></g>
+  <circle cx="445" cy="180" r="70" fill="#855541"/><path d="M375 250c0-58 145-58 145 0v170H375z" fill="#f0d15c"/>
+  <path d="M407 420v100m80-100v100" stroke="#354c39" stroke-width="28" stroke-linecap="round"/>
+  <path d="M390 290l-85 95m116-78l-90 116" stroke="#855541" stroke-width="24" stroke-linecap="round"/>
+  <rect x="32" y="32" width="220" height="52" rx="26" fill="rgba(255,255,255,.85)"/>
+  <text x="142" y="66" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" fill="#173f73" font-weight="700">Kitchen garden</text>
+</svg>

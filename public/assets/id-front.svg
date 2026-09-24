@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="450" viewBox="0 0 760 450">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9eef5"/><stop offset="1" stop-color="#bad6e3"/></linearGradient></defs>
+  <rect x="8" y="8" width="744" height="434" rx="28" fill="url(#g)" stroke="#26445a" stroke-width="8"/>
+  <rect x="55" y="88" width="190" height="235" rx="12" fill="#ef6b63"/>
+  <circle cx="150" cy="157" r="48" fill="#263238"/><path d="M85 292c8-70 40-103 65-103s57 33 65 103" fill="#263238"/>
+  <g fill="#284455"><rect x="300" y="86" width="360" height="16" rx="8"/><rect x="300" y="138" width="290" height="14" rx="7"/><rect x="300" y="190" width="330" height="14" rx="7"/><rect x="300" y="251" width="185" height="13" rx="7"/><rect x="300" y="302" width="315" height="13" rx="7"/></g>
+  <text x="55" y="390" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#284455">WunnaGo DEMO ID</text>
+  <text x="492" y="388" font-family="Arial, sans-serif" font-size="21" fill="#284455">NOT A REAL DOCUMENT</text>
+</svg>

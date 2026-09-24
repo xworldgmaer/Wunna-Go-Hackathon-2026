@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580">
+  <rect width="900" height="580" fill="#312b4e"/><circle cx="740" cy="100" r="120" fill="#4e4774"/><circle cx="150" cy="480" r="170" fill="#40395f"/>
+  <circle cx="440" cy="165" r="70" fill="#7f513c"/><path d="M370 235c0-55 145-55 145 0v170H370z" fill="#e2a74d"/>
+  <path d="M400 290l-115 85m190-84l95 78" stroke="#7f513c" stroke-width="24" stroke-linecap="round"/>
+  <rect x="555" y="210" width="16" height="205" rx="8" fill="#eee"/><path d="M571 220q75 20 92 86" stroke="#eee" stroke-width="14" fill="none"/><ellipse cx="655" cy="323" rx="36" ry="25" fill="#eee"/>
+  <path d="M260 300c0-40 70-40 70 0s-70 40-70 0zm45-85v85" stroke="#f7c843" stroke-width="12" fill="none"/>
+  <rect x="32" y="32" width="205" height="52" rx="26" fill="rgba(255,255,255,.9)"/>
+  <text x="134" y="66" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" fill="#173f73" font-weight="700">Music rehearsal</text>
+</svg>

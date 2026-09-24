@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580">
+  <rect width="900" height="580" fill="#d7b68d"/><rect y="390" width="900" height="190" fill="#805b42"/>
+  <g stroke="#9a6844" stroke-width="18"><path d="M0 90h900M0 170h900M0 250h900"/></g>
+  <circle cx="440" cy="175" r="72" fill="#704c38"/><path d="M365 245c0-55 150-55 150 0v165H365z" fill="#335f73"/>
+  <path d="M392 300l-85 90m170-90l80 88" stroke="#704c38" stroke-width="25" stroke-linecap="round"/>
+  <rect x="270" y="370" width="360" height="52" rx="12" fill="#5d3f2b"/><path d="M355 365l40-80 40 80z" fill="#c88b52"/><circle cx="520" cy="352" r="26" fill="#e0ad63"/>
+  <rect x="32" y="32" width="250" height="52" rx="26" fill="rgba(255,255,255,.85)"/>
+  <text x="157" y="66" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" fill="#173f73" font-weight="700">Mahogany workshop</text>
+</svg>

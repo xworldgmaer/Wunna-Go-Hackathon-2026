@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f2c99f"/><stop offset="1" stop-color="#d98f61"/></linearGradient></defs>
+  <rect width="900" height="580" fill="url(#g)"/>
+  <rect y="410" width="900" height="170" fill="#b77b55"/>
+  <circle cx="430" cy="175" r="78" fill="#7f4f3d"/>
+  <path d="M350 250c0-60 160-60 160 0v155H350z" fill="#f4e1c1"/>
+  <path d="M610 390c0-80-120-80-120 0h120z" fill="#aa5c38"/>
+  <ellipse cx="550" cy="405" rx="115" ry="36" fill="#744331"/>
+  <ellipse cx="550" cy="393" rx="92" ry="23" fill="#d7874d"/>
+  <path d="M525 280c-35 32-55 68-55 109m160-108c-37 33-59 68-59 108" stroke="#7f4f3d" stroke-width="24" stroke-linecap="round" fill="none"/>
+  <circle cx="402" cy="162" r="7"/><circle cx="458" cy="162" r="7"/>
+  <path d="M410 197q20 15 40 0" stroke="#4a2b22" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <rect x="32" y="32" width="212" height="52" rx="26" fill="rgba(255,255,255,.85)"/>
+  <text x="138" y="66" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" fill="#173f73" font-weight="700">Pottery studio</text>
+</svg>
